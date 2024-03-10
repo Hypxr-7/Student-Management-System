@@ -2,10 +2,10 @@
 CC = g++
 
 # Compiler flags
-CFLAGS = -Wall -Wextra -g
+CFLAGS = -Wall -Wextra -g -std=c++20
 
 # Source files
-SRCS = src/main.cpp
+SRCS = src/main.cpp src/passwordManager.cpp
 
 # Object files
 OBJS = $(SRCS:.c=.o)
