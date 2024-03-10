@@ -4,17 +4,25 @@
 #include <string>
 #include <cmath>
 #include <vector>
+#include <fstream>
+#include <cassert>
+#include <cctype>
+#include <format>
 
 class PasswordManager {
 private:
-    std::string password;
-    std::string username;
     int encryptionKey;
     std::string Encrypt(std::string plainText);
     std::string Decrypt(std::string cipherText);
     bool IsPrime(int number);
+    bool ValidateUsername(std::string un);
+    bool UserExists(std::string un);
+    bool ValidatePassword(std::string pw);
+    void WriteToFile(std::string fileHandle, std::string line);
+    std::string StripString(std::string s);
 public:
-    PasswordManager(std::string pw);
-    void print();
+    PasswordManager();
+    void RegisterUser();
+    void PrintUserList();
 
 };

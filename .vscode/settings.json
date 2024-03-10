@@ -51,5 +51,12 @@
         "streambuf": "cpp",
         "typeinfo": "cpp",
         "variant": "cpp"
-    }
+    },
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "c:\\Users\\abdul\\OneDrive\\University Stuff\\Semester 2\\Object Oriented Programming\\Final Project\\Student-Management-System",
+            "binaryPath": "c:\\Users\\abdul\\OneDrive\\University Stuff\\Semester 2\\Object Oriented Programming\\Final Project\\Student-Management-System\\myprogram",
+            "binaryArgs": []
+        }
+    ]
 }
