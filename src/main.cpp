@@ -45,7 +45,10 @@ int main(){
     // } 
 
     Student student;
-    student.AddStudent();
+    // student.AddStudent();
+    // student.DisplayStudents();
+    // student.UpdateStudent();
+    // student.DeleteStudent();
 
     return 0;
 }
