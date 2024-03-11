@@ -23,6 +23,7 @@ private:
 public:
     PasswordManager();
     void RegisterUser();
+    bool Login();
     void PrintUserList();
 
 };

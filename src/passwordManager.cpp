@@ -141,3 +141,35 @@ std::string PasswordManager::StripString(std::string s){
     }
     return stripped;
 }
+
+bool PasswordManager::Login(){
+    std::fstream fileHandle;
+    fileHandle.open("data/loginInfo.csv", std::ios::in);
+    assert(fileHandle.is_open());  // file not found 
+
+    std::string un;
+    std::cout << "Enter your username: ";
+    std::getline(std::cin, un);
+    if (!UserExists(un)){
+        std::cout << "Username does not exist" << std::endl;
+        return false;
+    }
+
+    std::string pw;
+    std::cout << "Enter your password: ";
+    std::getline(std::cin, pw);
+    std::string encryptedPW = Encrypt(StripString(pw));
+    std::string line;
+    std::getline(fileHandle, line);  // skip header
+    while (std::getline(fileHandle, line)){
+        std::string username = line.substr(0, line.find(","));
+        std::string password = line.substr(line.find(",") + 1);
+        if (username == un && password == encryptedPW){
+            fileHandle.close();
+            return true;
+        }
+    }
+    fileHandle.close();
+    std::cout << "Incorrect password" << std::endl;
+    return false;
+}
