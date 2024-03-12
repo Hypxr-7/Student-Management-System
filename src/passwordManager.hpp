@@ -14,7 +14,6 @@ private:
     int encryptionKey;
     std::string Encrypt(std::string plainText);
     std::string Decrypt(std::string cipherText);
-    bool IsPrime(int number);
     bool ValidateUsername(std::string un);
     bool UserExists(std::string un);
     bool ValidatePassword(std::string pw);

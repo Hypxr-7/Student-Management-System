@@ -113,3 +113,44 @@ std::string Student::StripString(std::string str){
             newStr += c;
     return str;
 }
+
+void Student::UpdateStudentName(){
+    int id = -1;
+    while (id > studentCount || id < 0){
+        std::cout << "Enter student ID to update: ";
+        std::cin >> id;
+    }
+
+    std::string newName;
+    std::cout << "Enter new name: ";
+    std::cin.ignore();
+    std::getline(std::cin, newName);
+    while (!CheckValidName(newName)){
+        std::cout << "Invalid name. Please enter a valid name: ";
+        std::getline(std::cin, newName);
+    }
+
+    std::ifstream file("data/studentList.csv");
+    assert(file.is_open());
+    std::string line;
+    std::ofstream temp("data/temp.csv");
+    assert(temp.is_open());
+    std::getline(file, line);
+    temp << line << std::endl;
+
+    while (std::getline(file, line)){
+        std::stringstream ss(line);
+        std::string idStr, name, gpa;
+        std::getline(ss, idStr, ',');
+        std::getline(ss, name, ',');
+        std::getline(ss, gpa, ',');
+        if (std::stoi(idStr) == id)
+            temp << idStr << "," << newName << "," << gpa << std::endl;
+        else
+            temp << line << std::endl;
+    }
+    file.close();
+    temp.close();
+    remove("data/studentList.csv");
+    rename("data/temp.csv", "data/studentList.csv");
+}

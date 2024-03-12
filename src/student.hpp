@@ -27,6 +27,6 @@ public:
     Student();
     void AddStudent();
     void DisplayStudents();
-    void UpdateStudent();
+    void UpdateStudentName();
     void DeleteStudent();
 };

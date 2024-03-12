@@ -4,23 +4,7 @@
 #include <cstdlib>
 #include "passwordManager.hpp"
 #include "student.hpp"
-
-// Asks user for a number between 1 and max 
-// repeats until user enters a valid number
-int GetUserNumber(int max){
-    int choice = -1;
-    while (choice < 1 || choice > max){
-        std::cout << "Enter your choice: ";
-        std::cin >> choice;
-        if (std::cin.fail()){
-            std::cin.clear();
-            std::string line;
-            std::getline(std::cin, line);
-            choice = -1;
-        }
-    }
-    return choice;
-}
+#include "inputHandle.hpp"
 
 int main(){
     // std::cout << std::format("{:^60}", "**Welcome to the Student Management System**") << std::endl << std::endl;
@@ -44,11 +28,11 @@ int main(){
     //         exit(1);
     // } 
 
-    Student student;
+    // Student student;
     // student.AddStudent();
     // student.DisplayStudents();
-    // student.UpdateStudent();
+    // student.UpdateStudentName();
     // student.DeleteStudent();
-
+    
     return 0;
 }
