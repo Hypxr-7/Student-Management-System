@@ -1,7 +1,7 @@
 #include "student.hpp"
 
-Student::Student(){
-    std::ifstream file("data/studentList.csv");
+Student::Student(std::string studentFileName) : studentFileName(studentFileName) {
+    std::ifstream file(studentFileName);
     assert(file.is_open());
     studentCount = 0;
     std::string line;
@@ -10,8 +10,6 @@ Student::Student(){
         studentCount++;
         lastID = stoi(StripString(line.substr(0, line.find(","))));
     }
-    std::cout << studentCount << " students found" << std::endl;
-    std::cout << "Last ID: " << lastID << std::endl;
     file.close();
 }
 
@@ -32,13 +30,6 @@ Student::StudentData Student::InputStudentData(){
     return studentData;
 }
 
-bool Student::CheckValidName(std::string name){
-    for (char c : name)
-        if (!isalpha(c) && c != ' ')
-            return false;
-    return true;
-}
-
 // TODO - Implement CalculateGPA
 double Student::CalculateGPA(std::string name){
     double gpa;
@@ -49,14 +40,14 @@ double Student::CalculateGPA(std::string name){
 
 void Student::AddStudent(){
     StudentData studentData = InputStudentData();
-    std::ofstream file("data/studentList.csv", std::ios::app);
+    std::ofstream file(studentFileName, std::ios::app);
     assert(file.is_open());
     file << studentData.id << "," << studentData.name << "," << studentData.gpa << std::endl;
     file.close();
 }
 
 void Student::DisplayStudents(){
-    std::ifstream file("data/studentList.csv");
+    std::ifstream file(studentFileName);
     assert(file.is_open());
     std::string line;
     std::cout << std::format("{:^5} {:^20} {:^5}\n", "ID", "Name", "GPA") << std::endl;
@@ -79,7 +70,7 @@ void Student::DeleteStudent(){
         std::cin >> id;
     }
 
-    std::ifstream file("data/studentList.csv");
+    std::ifstream file(studentFileName);
     assert(file.is_open());
     std::string line;
     std::ofstream temp("data/temp.csv");
@@ -96,22 +87,8 @@ void Student::DeleteStudent(){
     }
     file.close();
     temp.close();
-    remove("data/studentList.csv");
-    rename("data/temp.csv", "data/studentList.csv");
-}
-
-bool Student::CheckValidID(int id){
-    if (id < 0 || id > studentCount)
-        return false;
-    return true;
-}
-
-std::string Student::StripString(std::string str){
-    std::string newStr;
-    for (char c : str)
-        if (c != ' ')
-            newStr += c;
-    return str;
+    remove(studentFileName.c_str());
+    rename("data/temp.csv", studentFileName.c_str());
 }
 
 void Student::UpdateStudentName(){
@@ -130,7 +107,7 @@ void Student::UpdateStudentName(){
         std::getline(std::cin, newName);
     }
 
-    std::ifstream file("data/studentList.csv");
+    std::ifstream file(studentFileName);
     assert(file.is_open());
     std::string line;
     std::ofstream temp("data/temp.csv");
@@ -151,6 +128,6 @@ void Student::UpdateStudentName(){
     }
     file.close();
     temp.close();
-    remove("data/studentList.csv");
-    rename("data/temp.csv", "data/studentList.csv");
+    remove(studentFileName.c_str());
+    rename("data/temp.csv", studentFileName.c_str());
 }

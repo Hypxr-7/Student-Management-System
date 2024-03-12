@@ -7,11 +7,13 @@
 #include <format>
 #include <sstream>
 #include <cassert>
+#include "inputHandle.hpp"
 
 class Student{
 private:
     int studentCount;
     int lastID;
+    std::string studentFileName;
     struct StudentData{
         int id;
         std::string name;
@@ -20,11 +22,8 @@ private:
     StudentData studentData;
     StudentData InputStudentData();
     double CalculateGPA(std::string name);
-    bool CheckValidName(std::string name);
-    bool CheckValidID(int id);
-    std::string StripString(std::string str);
 public:
-    Student();
+    Student(std::string studentFileName);
     void AddStudent();
     void DisplayStudents();
     void UpdateStudentName();

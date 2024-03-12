@@ -1,9 +1,9 @@
 #include "inputHandle.hpp"
 
-int InputHandle::GetUserChoice(int max){
+int GetUserChoice(int max, std::string prompt){
     int choice = -1;
     while (choice < 1 || choice > max){
-        std::cout << "Enter your choice: ";
+        std::cout << prompt;
         std::cin >> choice;
         if (std::cin.fail()){
             std::cin.clear();
@@ -15,7 +15,7 @@ int InputHandle::GetUserChoice(int max){
     return choice;
 }
 
-std::string InputHandle::RemoveSpaces(std::string str){
+std::string RemoveSpaces(std::string str){
     std::string newStr;
     for (char c : str)
         if (!std::isspace(c))
@@ -23,13 +23,21 @@ std::string InputHandle::RemoveSpaces(std::string str){
     return newStr;
 }
 
-bool InputHandle::CheckValidName(std::string name){
+bool CheckValidName(std::string name){
     for (char c : name)
         if (!std::isalpha(c) && c != ' ')
             return false;
     return true;
 }
 
-bool InputHandle::CheckValidID(int id){
+bool CheckValidID(int id){
     return id > 0;
+}
+
+std::string StripString(std::string str){
+    size_t first = str.find_first_not_of(' ');
+    if (std::string::npos == first)
+        return str;
+    size_t last = str.find_last_not_of(' ');
+    return str.substr(first, (last - first + 1));
 }
