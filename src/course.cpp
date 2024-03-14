@@ -1,46 +1,26 @@
 #include "course.hpp"
 
-Course::Course(std::string fn) : courseFileName(fn) {
-    std::ifstream file(courseFileName);
-    assert(file.is_open());
-    courseCount = 0;
-    std::string line;
-    std::getline(file, line);  // skip header
-    while (std::getline(file, line)){
-        courseCount++;
-        lastID = stoi(StripString(line.substr(0, line.find(","))));
-    }
-    file.close();   
-}
+Course::Course(std::string fn) : FileHandle(fn) {}
 
 Course::CourseData Course::InputCourseData(){
-    CourseData courseData;
-
-    courseData.id = ++courseCount;
-
-    std::cout << "Enter course Name: ";
-    std::getline(std::cin, courseData.name);
-    while (!CheckValidName(courseData.name)){
-        std::cout << "Invalid name. Please enter a valid name: ";
-        std::getline(std::cin, courseData.name);
-    }
-
-    std::cout << "Enter course credit: ";
-    courseData.credit = GetUserChoice(10, "Enter credit (1-10): ");
-
-    return courseData;
+    CourseData data;
+    data.id = ++lastID;
+    data.name = StripString(GetUserInput("Enter course name: "));
+    data.credit = GetUserChoice(5, "Enter course credit: ");
+    return data;
 }
 
-void Course::AddCourse(){
-    CourseData courseData = InputCourseData();
-    std::ofstream file(courseFileName, std::ios::app);
+void Course::Add(){
+    CourseData data = InputCourseData();
+    std::ofstream file(fileName, std::ios::app);
     assert(file.is_open());
-    file << courseData.id << "," << courseData.name << "," << courseData.credit << std::endl;
+
+    file << data.id << "," << data.name << "," << data.credit << std::endl;
     file.close();
 }
 
-void Course::DisplayCourses(){
-    std::ifstream file(courseFileName);
+void Course::Display(){
+    std::ifstream file(fileName);
     assert(file.is_open());
     std::string line;
     std::cout << std::format("{:^5} {:^20} {:^5}\n", "ID", "Name", "Credit") << std::endl;
@@ -57,73 +37,53 @@ void Course::DisplayCourses(){
 }
 
 void Course::UpdateCourseName(){
-    std::ifstream file(courseFileName);
+    int id = GetUserChoice(lastID, "Enter ID to update: ");
+    std::string newName = StripString(GetUserInput("Enter new course name: "));
+
+    std::string tempFileName = fileName + ".tmp";
+    std::ifstream file(fileName);
     assert(file.is_open());
+    std::ofstream tempFile(tempFileName);
+    assert(tempFile.is_open());
+
     std::string line;
-    std::getline(file, line);  // skip header
+    std::getline(file, line);
+    tempFile << line << std::endl;
+    while (std::getline(file, line)){
+        if (stoi(StripString(line.substr(0, line.find(",")))) == id){
+            std::string oldName = StripString(line.substr(line.find(",") + 1, line.rfind(",")));
+            line.replace(line.find(oldName), oldName.length(), newName);
+        }
+        tempFile << line << std::endl;
+    }
     file.close();
-
-    int id = GetUserChoice(lastID, "Enter course ID to update: ");
-    std::string newName;
-    std::cout << "Enter new course name: ";
-    std::getline(std::cin, newName);
-    while (!CheckValidName(newName)){
-        std::cout << "Invalid name. Please enter a valid name: ";
-        std::getline(std::cin, newName);
-    }
-
-    std::ifstream fileIn(courseFileName);
-    assert(fileIn.is_open());
-    std::ofstream fileOut("temp.csv");
-    assert(fileOut.is_open());
-    std::getline(fileIn, line);
-    fileOut << line << std::endl;
-    while (std::getline(fileIn, line)){
-        std::stringstream ss(line);
-        std::string idStr, name, credit;
-        std::getline(ss, idStr, ',');
-        std::getline(ss, name, ',');
-        std::getline(ss, credit, ',');
-        if (std::stoi(idStr) == id)
-            fileOut << idStr << "," << newName << "," << credit << std::endl;
-        else
-            fileOut << line << std::endl;
-    }
-    fileIn.close();
-    fileOut.close();
-    std::remove(courseFileName.c_str());
-    std::rename("temp.csv", courseFileName.c_str());
+    tempFile.close();
+    remove(fileName.c_str());
+    rename(tempFileName.c_str(), fileName.c_str());
 }
 
 void Course::UpadateCourseCredit(){
-    std::ifstream file(courseFileName);
+    int id = GetUserChoice(lastID, "Enter ID to update: ");
+    int newCredit = GetUserChoice(5, "Enter new course credit: ");
+
+    std::string tempFileName = fileName + ".tmp";
+    std::ifstream file(fileName);
     assert(file.is_open());
+    std::ofstream tempFile(tempFileName);
+    assert(tempFile.is_open());
+
     std::string line;
-    std::getline(file, line);  // skip header
-    file.close();
-
-    int id = GetUserChoice(lastID, "Enter course ID to update: ");
-    int newCredit = GetUserChoice(10, "Enter new credit (1-10): ");
-
-    std::ifstream fileIn(courseFileName);
-    assert(fileIn.is_open());
-    std::ofstream fileOut("temp.csv");
-    assert(fileOut.is_open());
-    std::getline(fileIn, line);
-    fileOut << line << std::endl;
-    while (std::getline(fileIn, line)){
-        std::stringstream ss(line);
-        std::string idStr, name, credit;
-        std::getline(ss, idStr, ',');
-        std::getline(ss, name, ',');
-        std::getline(ss, credit, ',');
-        if (std::stoi(idStr) == id)
-            fileOut << idStr << "," << name << "," << newCredit << std::endl;
-        else
-            fileOut << line << std::endl;
+    std::getline(file, line);
+    tempFile << line << std::endl;
+    while (std::getline(file, line)){
+        if (stoi(StripString(line.substr(0, line.find(",")))) == id){
+            std::string oldCredit = StripString(line.substr(line.rfind(",")));
+            line.replace(line.find(oldCredit), oldCredit.length(), std::to_string(newCredit));
+        }
+        tempFile << line << std::endl;
     }
-    fileIn.close();
-    fileOut.close();
-    std::remove(courseFileName.c_str());
-    std::rename("temp.csv", courseFileName.c_str());
+    file.close();
+    tempFile.close();
+    remove(fileName.c_str());
+    rename(tempFileName.c_str(), fileName.c_str());
 }

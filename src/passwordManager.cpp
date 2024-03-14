@@ -149,6 +149,7 @@ bool PasswordManager::Login(){
 
     std::string un;
     std::cout << "Enter your username: ";
+    std::cin.ignore();
     std::getline(std::cin, un);
     if (!UserExists(un)){
         std::cout << "Username does not exist" << std::endl;

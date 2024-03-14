@@ -1,53 +1,17 @@
 #include "student.hpp"
 
-Student::Student(std::string studentFileName) : studentFileName(studentFileName) {
-    std::ifstream file(studentFileName);
+Student::Student(std::string studentFileName) : FileHandle(studentFileName) {}
+
+void Student::Add(){
+    StudentData student = InputStudentData();
+    std::ofstream file(fileName, std::ios::app);
     assert(file.is_open());
-    studentCount = 0;
-    std::string line;
-    std::getline(file, line);  // skip header
-    while (std::getline(file, line)){
-        studentCount++;
-        lastID = stoi(StripString(line.substr(0, line.find(","))));
-    }
+    file << student.id << "," << student.name << "," << student.gpa << std::endl;
     file.close();
 }
 
-Student::StudentData Student::InputStudentData(){
-    StudentData studentData;
-
-    studentData.id = ++studentCount;
-
-    std::cout << "Enter student Name: ";
-    std::getline(std::cin, studentData.name);
-    while (!CheckValidName(studentData.name)){
-        std::cout << "Invalid name. Please enter a valid name: ";
-        std::getline(std::cin, studentData.name);
-    }
-
-    studentData.gpa = CalculateGPA(studentData.name);
-
-    return studentData;
-}
-
-// TODO - Implement CalculateGPA
-double Student::CalculateGPA(std::string name){
-    double gpa;
-    std::cout << "Enter GPA for " << name << ": ";
-    std::cin >> gpa;
-    return gpa;
-}
-
-void Student::AddStudent(){
-    StudentData studentData = InputStudentData();
-    std::ofstream file(studentFileName, std::ios::app);
-    assert(file.is_open());
-    file << studentData.id << "," << studentData.name << "," << studentData.gpa << std::endl;
-    file.close();
-}
-
-void Student::DisplayStudents(){
-    std::ifstream file(studentFileName);
+void Student::Display(){
+    std::ifstream file(fileName);
     assert(file.is_open());
     std::string line;
     std::cout << std::format("{:^5} {:^20} {:^5}\n", "ID", "Name", "GPA") << std::endl;
@@ -63,71 +27,59 @@ void Student::DisplayStudents(){
     file.close();
 }
 
-void Student::DeleteStudent(){
-    int id = -1;
-    while (!CheckValidID(id)){
-        std::cout << "Enter student ID to delete: ";
-        std::cin >> id;
-    }
-
-    std::ifstream file(studentFileName);
-    assert(file.is_open());
-    std::string line;
-    std::ofstream temp("data/temp.csv");
-    assert(temp.is_open());
-    std::getline(file, line);
-    temp << line << std::endl;
-
-    while (std::getline(file, line)){
-        std::stringstream ss(line);
-        std::string idStr;
-        std::getline(ss, idStr, ',');
-        if (std::stoi(idStr) != id)
-            temp << line << std::endl;
-    }
-    file.close();
-    temp.close();
-    remove(studentFileName.c_str());
-    rename("data/temp.csv", studentFileName.c_str());
-}
-
 void Student::UpdateStudentName(){
-    int id = -1;
-    while (id > studentCount || id < 0){
-        std::cout << "Enter student ID to update: ";
-        std::cin >> id;
-    }
+    int id = GetUserChoice(lastID, "Enter ID to update: ");
+    std::string newName = StripString(GetUserInput("Enter new student name: "));
 
-    std::string newName;
-    std::cout << "Enter new name: ";
-    std::cin.ignore();
-    std::getline(std::cin, newName);
-    while (!CheckValidName(newName)){
-        std::cout << "Invalid name. Please enter a valid name: ";
-        std::getline(std::cin, newName);
-    }
-
-    std::ifstream file(studentFileName);
+    std::string tempFileName = fileName + ".tmp";
+    std::ifstream file(fileName);
     assert(file.is_open());
-    std::string line;
-    std::ofstream temp("data/temp.csv");
-    assert(temp.is_open());
-    std::getline(file, line);
-    temp << line << std::endl;
+    std::ofstream tempFile(tempFileName);
+    assert(tempFile.is_open());
 
+    std::string line;
+    std::getline(file, line);
+    tempFile << line << std::endl;
     while (std::getline(file, line)){
-        std::stringstream ss(line);
-        std::string idStr, name, gpa;
-        std::getline(ss, idStr, ',');
-        std::getline(ss, name, ',');
-        std::getline(ss, gpa, ',');
-        if (std::stoi(idStr) == id)
-            temp << idStr << "," << newName << "," << gpa << std::endl;
-        else
-            temp << line << std::endl;
+        if (stoi(StripString(line.substr(0, line.find(",")))) == id){
+            std::string oldName = StripString(line.substr(line.find(",") + 1, line.rfind(",")));
+            line.replace(line.find(oldName), oldName.length(), newName);
+        }
+        tempFile << line << std::endl;
     }
     file.close();
-    temp.close();
-    remove(studentFileName.c_str());
-    rename("data/temp.csv", studentFileName.c_str());
+    tempFile.close();
+    remove(fileName.c_str());
+    rename(tempFileName.c_str(), fileName.c_str());
 }
+
+Student::StudentData Student::InputStudentData(){
+    StudentData data;
+    data.id = ++lastID;
+    data.name = StripString(GetUserInput("Enter student name: "));
+    data.gpa = CalculateGPA(data.name);
+    return data;
+}
+
+double Student::CalculateGPA(std::string name){
+    std::ifstream file("grades.txt");
+    assert(file.is_open());
+    std::string line;
+    std::getline(file, line);  // skip header
+    double total = 0;
+    int count = 0;
+    while (std::getline(file, line)){
+        std::stringstream ss(line);
+        std::string studentName, courseName, grade;
+        std::getline(ss, studentName, ',');
+        std::getline(ss, courseName, ',');
+        std::getline(ss, grade, ',');
+        if (studentName == name){
+            total += std::stod(grade);
+            count++;
+        }
+    }
+    file.close();
+    return total / count;
+}
+

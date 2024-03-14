@@ -17,7 +17,7 @@ protected:
     int IDcount;
 public:
     FileHandle(std::string fn);
-    virtual void Add();
-    virtual void Display();
+    virtual void Add() = 0;
+    virtual void Display() = 0;
     virtual void Delete();
 };

@@ -1,31 +1,19 @@
 #pragma once
+ 
+#include "fileHandle.hpp"
 
-#include <iostream>
-#include <string>
-#include <fstream>
-#include <cctype>
-#include <format>
-#include <sstream>
-#include <cassert>  
-#include "inputHandle.hpp"
-
-class Course{
+class Course : public FileHandle{
 private:
-    int courseCount;
-    int lastID;
-    std::string courseFileName;
     struct CourseData{
         int id;
         std::string name;
         int credit;
     };
-    CourseData courseData;
     CourseData InputCourseData();
 public:
     Course(std::string fn);
-    void AddCourse();
-    void DisplayCourses();
+    void Add();
+    void Display();
     void UpdateCourseName();
     void UpadateCourseCredit();
-    void DeleteCourse();
 };

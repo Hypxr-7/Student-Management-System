@@ -15,6 +15,14 @@ int GetUserChoice(int max, std::string prompt){
     return choice;
 }
 
+std::string GetUserInput(std::string prompt){
+    std::string input;
+    std::cout << prompt;
+    std::cin.ignore();
+    std::getline(std::cin, input);
+    return input;
+}
+
 std::string RemoveSpaces(std::string str){
     std::string newStr;
     for (char c : str)

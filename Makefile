@@ -5,7 +5,7 @@ CC = g++
 CFLAGS = -Wall -Wextra -g -std=c++20
 
 # Source files
-SRCS = src/main.cpp src/passwordManager.cpp src/student.cpp src/course.cpp
+SRCS = src/main.cpp src/passwordManager.cpp src/student.cpp src/course.cpp src/fileHandle.cpp src/inputHandle.cpp
 
 # Object files
 OBJS = $(SRCS:.c=.o)
