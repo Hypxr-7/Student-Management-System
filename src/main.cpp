@@ -7,9 +7,10 @@
 #include "fileHandle.hpp"
 
 int main(){
-    bool loginStatus = false;
 
     while (true){
+        bool loginStatus = false;
+        int choice1, choice2, choice3;
         PasswordManager passwordManager;
         Student student("data/studentList.csv");
         Course course("data/courseList.csv");
@@ -17,17 +18,14 @@ int main(){
         std::cout << std::format("{:^60}", "**Welcome to the Student Management System**") << std::endl << std::endl;
         std::cout << std::format("|{:^20}|{:^20}|{:^20}|", "[1] Register", "[2] Login", "[3] Exit") << std::endl;
 
-        int choice = GetUserChoice(3, "Enter your choice: ");
+        choice1 = GetUserChoice(3, "Enter your choice: ");
 
-        if (choice == 1){
+        if (choice1 == 1){
             passwordManager.RegisterUser();
             continue;
         }
 
-        else if (choice == 3)
-            exit(0);
-
-        else if (choice == 2){
+        else if (choice1 == 2){
             if (passwordManager.Login())
                 loginStatus = true;
             else{
@@ -36,29 +34,42 @@ int main(){
             }
         }
 
-        while (loginStatus){
-            std::cout << std::format("|{:^20}|{:^20}|{:^20}|{:^20}|{:^20}|", "[1] Add Student", "[2] Add Course", "[3] View Student List", "[4] View Course List", "[5] Logout") << std::endl;
-            int choice = GetUserChoice(5, "Enter your choice: ");
+        else if (choice1 == 3) exit(0);
 
-            if (choice == 1){
-                student.Add();
+
+        if (loginStatus){
+            std::cout << std::format("|{:^20}|{:^20}|{:^20}|", "[1] Student Info", "[2] Course Info", "[3] Log Out")<< std::endl;
+            choice2 = GetUserChoice(2, "Enter your choice: ");
+
+            if (choice2 == 3) loginStatus = false;
+        }
+
+        if (loginStatus && choice2 == 1){
+            while (true){
+                std::cout << std::format("|{:^20}|{:^20}|{:^20}|{:^20}|{:^20}|", "[1] Add", "[2] Display", "[3] Update Name", "[4] Delete", "[5] Back") << std::endl;
+
+                choice3 = GetUserChoice(5, "Enter your choice: ");
+
+                if (choice3 == 1) student.Add();
+                else if (choice3 == 2) student.Display();
+                else if (choice3 == 3) student.UpdateStudentName();
+                else if (choice3 == 4) student.Delete();
+                else if (choice3 == 5) break;
             }
+        }
 
-            else if (choice == 2){
-                course.Add();
-            }
+        if (loginStatus && choice2 == 2){
+            while (true){
+                std::cout << std::format("|{:^20}|{:^20}|{:^20}|{:^20}|{:^20}|{:^20}|", "[1] Add", "[2] Display", "[3] Update Name", "[4] Update Credit", "[5] Delete", "[6] Back") << std::endl;
+                
+                choice3 = GetUserChoice(5, "Enter your choice: ");
 
-            else if (choice == 3){
-                student.Display();
-            }
-
-            else if (choice == 4){
-                course.Display();
-            }
-
-            else if (choice == 5){
-                loginStatus = false;
-                break;
+                if (choice3 == 1) course.Add();
+                else if (choice3 == 2) course.Display();
+                else if (choice3 == 3) course.UpdateCourseName();
+                else if (choice3 == 4) course.UpadateCourseCredit();
+                else if (choice3 == 5) course.Delete();
+                else if (choice3 == 6) break;
             }
         }
     }
