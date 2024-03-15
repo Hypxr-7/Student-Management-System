@@ -57,12 +57,19 @@ Student::StudentData Student::InputStudentData(){
     StudentData data;
     data.id = ++lastID;
     data.name = StripString(GetUserInput("Enter student name: "));
-    data.gpa = CalculateGPA(data.name);
+    data.gpa = CalculateGPA(data.id);
     return data;
 }
 
 // This function is not implemented yet
-double Student::CalculateGPA(std::string name){
-    return 3.0;
-}
+// double Student::CalculateGPA(int id){
+//     std::string studentCourseFileName = "data/studentCourse.csv";
+//     std::ifstream file(fileName);
+//     std::ifstream fileStudentCourse(studentCourseFileName);
+//     std::ifstream fileCourse("data/course.csv");
+//     assert(file.is_open());
+
+//     std::string line;
+
+// }
 

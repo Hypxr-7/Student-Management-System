@@ -1,7 +1,8 @@
 #include "passwordManager.hpp"
 
-PasswordManager::PasswordManager() : 
+PasswordManager::PasswordManager(std::string lf) : 
     encryptionKey(5){
+    loginFile = lf;
     std::cout << "Password Manager Created" << std::endl;
 }
 
@@ -23,7 +24,7 @@ std::string PasswordManager::Decrypt(std::string cipherText){
 
 void PasswordManager::PrintUserList(){
     std::fstream fileHandle;
-    fileHandle.open("data/loginInfo.csv", std::ios::in);
+    fileHandle.open(loginFile, std::ios::in);
     assert(fileHandle.is_open());  // file not found
     std::string line;
     std::getline(fileHandle, line);  // skip header
@@ -39,7 +40,7 @@ void PasswordManager::PrintUserList(){
 
 void PasswordManager::RegisterUser(){
     std::fstream fileHandle;
-    fileHandle.open("data/loginInfo.csv", std::ios::in);
+    fileHandle.open(loginFile, std::ios::in);
     assert(fileHandle.is_open());  // file not found 
 
     std::string un = "-1";
@@ -60,7 +61,7 @@ void PasswordManager::RegisterUser(){
     
     std::string encryptedPW = Encrypt(StripString(pw));
     
-    WriteToFile("data/loginInfo.csv", StripString(un) + "," + encryptedPW);
+    WriteToFile(loginFile, StripString(un) + "," + encryptedPW);
     fileHandle.close();
 }
 
@@ -73,7 +74,7 @@ bool PasswordManager::ValidateUsername(std::string un){
 
 bool PasswordManager::UserExists(std::string un){
     std::fstream fileHandle;
-    fileHandle.open("data/loginInfo.csv", std::ios::in);
+    fileHandle.open(loginFile, std::ios::in);
     assert(fileHandle.is_open());  // file not found 
 
     std::string line;
@@ -144,7 +145,7 @@ std::string PasswordManager::StripString(std::string s){
 
 bool PasswordManager::Login(){
     std::fstream fileHandle;
-    fileHandle.open("data/loginInfo.csv", std::ios::in);
+    fileHandle.open(loginFile, std::ios::in);
     assert(fileHandle.is_open());  // file not found 
 
     std::string un;

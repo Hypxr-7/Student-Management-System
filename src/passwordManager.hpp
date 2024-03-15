@@ -11,6 +11,7 @@
 
 class PasswordManager {
 private:
+    std::string loginFile;
     int encryptionKey;
     std::string Encrypt(std::string plainText);
     std::string Decrypt(std::string cipherText);
@@ -20,7 +21,7 @@ private:
     void WriteToFile(std::string fileHandle, std::string line);
     std::string StripString(std::string s);
 public:
-    PasswordManager();
+    PasswordManager(std::string lf);
     void RegisterUser();
     bool Login();
     void PrintUserList();

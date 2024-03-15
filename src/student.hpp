@@ -10,7 +10,8 @@ private:
         double gpa;
     };
     StudentData InputStudentData();
-    double CalculateGPA(std::string name);
+    // double CalculateGPA(int id);
+    // double GradeToGPA(char grade);
 public:
     Student(std::string studentFileName);
     void Add();

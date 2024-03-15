@@ -15,7 +15,7 @@ FileHandle::FileHandle(std::string fn) : fileName(fn) {
 }
 
 void FileHandle::Delete(){
-    int id = GetUserChoice(IDcount, "Enter ID to delete: ");
+    int id = GetUserChoice(lastID, "Enter ID to delete: ");
 
     std::string tempFileName = fileName + ".tmp";
     std::ifstream file(fileName);
