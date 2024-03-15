@@ -7,6 +7,8 @@ private:
     std::string studentFileName;
     std::string courseFileName;
 public:
-    Enrollment(std::string studentFileName, std::string courseFileName, std::string enrollmentFileName);
-
+    Enrollment(std::string studentfn, std::string coursefn, std::string enrollmentfn);
+    void Display();
+    void Delete();
+    void Add();
 };
