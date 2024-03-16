@@ -49,9 +49,18 @@ void Enrollment::Add(){
 void Enrollment::Display(){
     std::ifstream enrollmentFile(fileName);
     std::string line;
+    std::getline(enrollmentFile, line); // skip header
+    std::cout << std::format("{:^20} {:^20} {:^20}\n", "Student ID", "Course ID", "Grade") << std::endl;
+
     while(std::getline(enrollmentFile, line)){
-        std::cout << line << std::endl;
+        std::stringstream ss(line);
+        std::string studentID, courseID, grade;
+        std::getline(ss, studentID, ',');
+        std::getline(ss, courseID, ',');
+        std::getline(ss, grade, ',');
+        std::cout << std::format("{:^20} {:^20} {:^20}\n", studentID, courseID, grade);
     }
+    enrollmentFile.close();
 }
 
 void Enrollment::Delete(){
@@ -59,17 +68,23 @@ void Enrollment::Delete(){
     std::ofstream tempFile("temp.csv");
     std::string line;
     std::string studentID, courseID;
+
     std::cout << "Enter ID of student to unenroll: ";
     std::string unenrollID;
     std::cin >> unenrollID;
+
+    std::cout << "Enter ID of course to unenroll student from: ";
+    std::string unenrollCourseID;
+    std::cin >> unenrollCourseID;
+
+    std::string lineToDelete = unenrollID + "," + unenrollCourseID;
+    
     while(std::getline(enrollmentFile, line)){
-        std::stringstream ss(line);
-        std::getline(ss, studentID, ',');
-        std::getline(ss, courseID, ',');
-        if(studentID != unenrollID){
+        if(line.find(lineToDelete) == std::string::npos){
             tempFile << line << std::endl;
         }
     }
+    
     tempFile.close();
     enrollmentFile.close();
     remove(fileName.c_str());

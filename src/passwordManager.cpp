@@ -3,7 +3,6 @@
 PasswordManager::PasswordManager(std::string lf) : 
     encryptionKey(5){
     loginFile = lf;
-    std::cout << "Password Manager Created" << std::endl;
 }
 
 std::string PasswordManager::Encrypt(std::string plainText){

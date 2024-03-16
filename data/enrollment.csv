@@ -1,1 +1,6 @@
-student id,course id
+student id,course id,grade
+3,2,A
+3,3,B
+3,4,C
+3,1,A
+3,1,N/A
