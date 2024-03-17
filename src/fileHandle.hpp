@@ -8,6 +8,7 @@
 #include <sstream>
 #include <cassert>
 #include "inputHandle.hpp"
+#include "gpa.hpp"
 
 
 class FileHandle{

@@ -7,6 +7,7 @@
 #include "inputHandle.hpp"
 #include "course.hpp"
 #include "fileHandle.hpp"
+#include "gpa.hpp"
 
 int main(){
     bool loginStatus = false;
@@ -70,6 +71,8 @@ int main(){
                 else if (choice3 == 3) student.UpdateStudentName();
                 else if (choice3 == 4) student.Delete();
                 else if (choice3 == 5) break;
+
+                UpdateGPA();
             }
         }
 
@@ -89,6 +92,8 @@ int main(){
                 else if (choice3 == 4) course.UpadateCourseCredit();
                 else if (choice3 == 5) course.Delete();
                 else if (choice3 == 6) break;
+
+                UpdateGPA();
             }
         }
 
@@ -109,6 +114,8 @@ int main(){
                 }
                 else if (choice3 == 3) enrollment.Delete();
                 else if (choice3 == 4) break;
+
+                UpdateGPA();
             }
         }
     }
