@@ -1,10 +1,6 @@
 #include "passwordManager.hpp"
 
-PasswordManager::PasswordManager(std::string lf) : 
-    encryptionKey(5),
-    loginFile(lf)
-
-{}
+PasswordManager::PasswordManager(std::string lf) : encryptionKey(5), loginFile(lf) {}
 
 std::string PasswordManager::Encrypt(std::string plainText){
     std::string cipherText;
@@ -23,19 +19,18 @@ std::string PasswordManager::Decrypt(std::string cipherText){
 }
 
 void PasswordManager::PrintUserList(){
-    std::fstream fileHandle;
-    fileHandle.open(loginFile, std::ios::in);
+    std::ifstream fileHandle(loginFile);
     assert(fileHandle.is_open());  // file not found
+
     std::string line;
     std::getline(fileHandle, line);  // skip header
-    std::cout << std::format("|{:^20}|{:^20}|", "Username", "Password") << std::endl;
+    std::cout << std::format("{:^20}", "Username") << std::endl;
     while (std::getline(fileHandle, line)){
-        std::string un = line.substr(0, line.find(","));
-        std::string pw = line.substr(line.find(",") + 1);
-        std::cout << std::format("|{:^20}|{:^20}|", un, Decrypt(pw)) << std::endl;
+        std::string username = line.substr(0, line.find(","));
+        std::cout << std::format("{:^20}", username) << std::endl;
     }
-    fileHandle.close();
 
+    fileHandle.close();
 }
 
 void PasswordManager::RegisterUser(){
@@ -45,10 +40,10 @@ void PasswordManager::RegisterUser(){
 
     std::string un = "-1";
     while (!ValidateUsername(un)){
-        std::cout << "Enter your username (no numbers or special characters): ";
+        std::cout << "Enter your Name (no numbers or special characters): ";
         std::getline(std::cin, un);
         if (UserExists(un)){
-            std::cout << "Username already exists" << std::endl;
+            std::cout << "User already exists" << std::endl;
             un = "-1";
         }
     }
